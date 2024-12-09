@@ -887,12 +887,12 @@ def update_data(
         # assign old weights
         new_data = np.zeros(shape)
         if method == "basic":
-            new_data[old_valid] = (
-                old_data[old_valid] * old_factor[old_valid]
-            ).astype(old_data.dtype)
+            new_data[old_valid] = old_data[old_valid] * old_factor[old_valid]
             new_data[current_valid] += (
                 current_data[current_valid] * current_factor[current_valid]
-            ).astype(old_data.dtype)
+            )
+            if np.issubdtype(current_data.dtype, np.integer):
+                new_data = np.round(new_data).astype(current_data.dtype)
         elif method == "bool":
             new_data[old_valid] = old_data[old_valid]
             new_data[current_valid] = np.logical_or(
